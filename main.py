@@ -1,145 +1,48 @@
+# importando as bibliotecas necessárias
+import os
 import pandas as pd
-
 import sqlite3
+from kivy.app import App
+from kivy.uix.label import Label
+from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout
 
+# Banco de dados
 banco_de_dados = 'my_db.db'
 
+# definindo a classe principal
 
-def criar_db(caminho_dado_csv, tabela):
-    
-    """Cria um banco de dados sqlite3 através de um arquivo .csv"""
-    
-    df = pd.read_csv(caminho_dado_csv)
+class MeuApp(App):
 
-    conexao = sqlite3.connect('my_db.db')
-
-    df.to_sql(tabela, conexao, if_exists='replace', index=False)
-    
-    conexao.close()
-    
-    print('Banco de dados criado com sucesso!')
-
-
-def mostrar_banco(banco_de_dados):
-
-    # Crie uma conexão com o banco de dados SQLite
-    conexao = sqlite3.connect(banco_de_dados)
-
-    # Crie um cursor para executar comandos SQL
-    cursor = conexao.cursor()
-
-    # Execute um comando SQL para selecionar todos os dados da tabela "clientes"
-    cursor.execute("SELECT * FROM clientes")
-
-    # Recupere os resultados da consulta
-    resultados = cursor.fetchall()
-
-    # Imprima os resultados
-    for linha in resultados:
-        print(linha)
-    
-    # Feche o cursor e a conexão com o banco de dados
-    cursor.close()
-    conexao.close()
-
-##############################################################################
-
-def pegar_colunas(banco_de_dados):
-
-    # Crie uma conexão com o banco de dados SQLite
-    conexao = sqlite3.connect(banco_de_dados)
-
-    # Crie um cursor para executar comandos SQL
-    cursor = conexao.cursor()
-
-    # Execute um comando SQL para ver as colunas da tabela "clientes"
-    pegar_col = "SELECT * FROM sqlite_master WHERE type='table' AND name='dados'"
-    cursor.execute(pegar_col)
-
-    # Recupere o resultado da consulta
-    tabela_info = cursor.fetchone()
-
-    # Recupere o nome das colunas da tabela "clientes" do resultado da consulta
-    colunas = [coluna_info[1] for coluna_info in cursor.execute("PRAGMA table_info(dados)").fetchall()]
-    
-    colunas.pop(0)
-    colunas.pop(0)
-
-    print(colunas)
-
-    # Feche o cursor e a conexão com o banco de dados
-    cursor.close()
-    conexao.close()
-    
-    return tuple(colunas)
-
-
-############################################################################3
-
-
-def inserir_dados(banco_de_dados):
-
-    # Crie uma conexão com o banco de dados SQLite
-    conexao = sqlite3.connect(banco_de_dados)
-
-    # Crie um cursor para executar comandos SQL
-    cursor = conexao.cursor()
-    
-    colunas = pegar_colunas(banco_de_dados)
-    
-    valores = (tuple(len(colunas)*'?'.split()))
-
-    # Execute um comando SQL para inserir um novo registro na tabela "clientes"
-    
-    resposta = 's'    
-    
-    while resposta == 's':      
+    # método para construir a interface gráfica
+    def build(self):
         
-        parametros = []
+        # criando um layout principal
+        layout = BoxLayout(orientation='vertical')
         
-        for col in colunas:
-    
-            parametros.append(input(f'Insira a(o) {col} :'))
-
-        parametros = tuple(parametros)
-
-
-        comando_sql = f"INSERT INTO dados {colunas} VALUES {parametros}"
+        # criando um label
+        label = Label(text='Olá, mundo!')
         
-        cursor.execute(comando_sql)
+        # criando um botão
+        botao = Button(text='Clique aqui')
 
-        # Salve as alterações no banco de dados
-        conexao.commit()
+        # adicionando os widgets ao layout
+        layout.add_widget(label)
+        layout.add_widget(botao)
 
-        resposta = input("Deseja continuar inserindo dados s/n? ")
-    
-    # Feche o cursor e a conexão com o banco de dados
-    cursor.close()
-    conexao.close()
+        # retornando o layout como a interface gráfica da aplicação
 
-inserir_dados(banco_de_dados)
+        return layout
+                                                                                                                                        
+                                                                                                                                    # inicializando a aplicação
 
-
-
-
-
-
-
+if __name__ == '__main__':
+    os.environ['DISPLAY'] = ':99'
+    os.system('Xvfb :99 -screen 0 1024x768x24 &')
+    MeuApp().run()
 
 
 
 
-
-
-'''def preencher_colunas(df):
-    
-    for coluna in df:
-
-        if coluna == 'id':
-            df.loc[id, coluna] = id + 1
-            continue
-        dado = input(f'Informe o(a) {coluna}: ')
-        df[coluna] = [dado]
-    return df'''
 
 
