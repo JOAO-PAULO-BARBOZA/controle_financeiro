@@ -1,5 +1,4 @@
-
-
+import sqlite3
 
 def criar_db(caminho_dado_csv, tabela):
     
@@ -18,7 +17,7 @@ def criar_db(caminho_dado_csv, tabela):
 
 def mostrar_banco(banco_de_dados):
 
-    """Mostra o contúdo do manco de dados"""
+    """Mostra o contúdo do banco de dados"""
     
     # Crie uma conexão com o banco de dados SQLite
     conexao = sqlite3.connect(banco_de_dados)
@@ -65,7 +64,6 @@ def pegar_colunas(banco_de_dados):
     colunas.pop(0)
 
     # Feche o cursor e a conexão com o banco de dados
-    
     cursor.close()
     conexao.close()
     
@@ -73,6 +71,8 @@ def pegar_colunas(banco_de_dados):
 
 
 def inserir_dados(banco_de_dados):
+
+    """Faz a inserção de dados no bando de dados """
 
     conexao = sqlite3.connect(banco_de_dados)
 
@@ -109,5 +109,41 @@ def inserir_dados(banco_de_dados):
     # Feche o cursor e a conexão com o banco de dados
     cursor.close()
     conexao.close()
+
+def deletar_dados(banco_de_dados):
+
+
+    """Deleta todos os dados do banco de dados"""
+    
+    # Crie uma conexão com o banco de dados SQLite
+    conexao = sqlite3.connect(banco_de_dados)
+
+    # Crie um cursor para executar comandos SQL
+    cursor = conexao.cursor()
+
+    # Execute um comando SQL para deletar todos os dados da tabela "dados"
+    cursor.execute("DELETE FROM dados")
+    
+    conexao.commit()
+    # Feche o cursor e a conexão com o banco de dados
+    
+    cursor.close()
+    conexao.close()
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
